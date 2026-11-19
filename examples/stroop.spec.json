@@ -1,0 +1,220 @@
+{
+  "spec_version": "1.0",
+  "name": "stroop",
+  "title": "Colour-word Stroop task",
+  "window": {
+    "size": [
+      1024,
+      768
+    ],
+    "fullscreen": false,
+    "units": "height",
+    "color": [
+      0,
+      0,
+      0
+    ]
+  },
+  "info": {
+    "participant": "auto",
+    "session": "001"
+  },
+  "routines": {
+    "instruction": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "prompt",
+          "start": 0,
+          "end": {
+            "condition": "start_resp.rt"
+          },
+          "params": {
+            "text": "Name the INK COLOUR of the word.\n\nr = red    g = green    b = blue    y = yellow\n\nPress SPACE to start",
+            "letterHeight": 0.045,
+            "wrapWidth": 1.2
+          }
+        },
+        {
+          "type": "Keyboard",
+          "name": "start_resp",
+          "params": {
+            "allowedKeys": [
+              "space"
+            ],
+            "forceEndRoutine": true
+          }
+        }
+      ]
+    },
+    "trial": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "fixation",
+          "start": 0,
+          "end": {
+            "duration": 0.5
+          },
+          "params": {
+            "text": "+",
+            "letterHeight": 0.08
+          }
+        },
+        {
+          "type": "Text",
+          "name": "word",
+          "start": {
+            "condition": "fixation.status == FINISHED"
+          },
+          "end": {
+            "condition": "resp.rt"
+          },
+          "params": {
+            "text": "$word",
+            "color": "$ink_color",
+            "letterHeight": 0.1,
+            "pos": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "type": "Keyboard",
+          "name": "resp",
+          "params": {
+            "allowedKeys": [
+              "r",
+              "g",
+              "b",
+              "y"
+            ],
+            "store": "first",
+            "storeCorrect": true,
+            "correctAns": "$corr_key"
+          }
+        },
+        {
+          "type": "Code",
+          "name": "feedback_code",
+          "code": {
+            "end_routine": "feedback_text = 'Correct!' if resp.corr else 'Incorrect'"
+          }
+        }
+      ]
+    },
+    "feedback": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "msg",
+          "start": 0,
+          "end": {
+            "condition": "feedback_resp.rt"
+          },
+          "params": {
+            "text": "$feedback_text",
+            "letterHeight": 0.06,
+            "wrapWidth": 1.2
+          }
+        },
+        {
+          "type": "Keyboard",
+          "name": "feedback_resp",
+          "params": {
+            "allowedKeys": [
+              "space"
+            ],
+            "forceEndRoutine": true
+          }
+        }
+      ]
+    }
+  },
+  "flow": [
+    {
+      "routine": "instruction"
+    },
+    {
+      "loop": {
+        "name": "trials",
+        "routines": [
+          "trial",
+          "feedback"
+        ],
+        "n_reps": 1,
+        "order": "random",
+        "seed": 7,
+        "conditions": [
+          {
+            "word": "RED",
+            "ink_color": [
+              1,
+              0,
+              0
+            ],
+            "corr_key": "r",
+            "condition": "congruent"
+          },
+          {
+            "word": "GREEN",
+            "ink_color": [
+              0,
+              1,
+              0
+            ],
+            "corr_key": "g",
+            "condition": "congruent"
+          },
+          {
+            "word": "RED",
+            "ink_color": [
+              0,
+              1,
+              0
+            ],
+            "corr_key": "g",
+            "condition": "incongruent"
+          },
+          {
+            "word": "GREEN",
+            "ink_color": [
+              1,
+              0,
+              0
+            ],
+            "corr_key": "r",
+            "condition": "incongruent"
+          },
+          {
+            "word": "BLUE",
+            "ink_color": [
+              0,
+              0,
+              1
+            ],
+            "corr_key": "b",
+            "condition": "congruent"
+          },
+          {
+            "word": "BLUE",
+            "ink_color": [
+              1,
+              1,
+              0
+            ],
+            "corr_key": "y",
+            "condition": "incongruent"
+          }
+        ]
+      }
+    }
+  ],
+  "data": {
+    "filename": "data/{participant}/{name}_{date}",
+    "formats": [
+      "wide_csv"
+    ]
+  }
+}

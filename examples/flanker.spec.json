@@ -1,0 +1,143 @@
+{
+  "spec_version": "1.0",
+  "name": "flanker",
+  "title": "Eriksen flanker task",
+  "window": {
+    "size": [
+      1024,
+      768
+    ],
+    "fullscreen": false,
+    "units": "height",
+    "color": [
+      0,
+      0,
+      0
+    ]
+  },
+  "info": {
+    "participant": "auto",
+    "session": "001"
+  },
+  "routines": {
+    "instruction": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "prompt",
+          "start": 0,
+          "end": {
+            "condition": "start_resp.rt"
+          },
+          "params": {
+            "text": "Indicate the CENTRE letter.\n\nf = left    j = right\n\nPress SPACE to begin",
+            "letterHeight": 0.045,
+            "wrapWidth": 1.2
+          }
+        },
+        {
+          "type": "Keyboard",
+          "name": "start_resp",
+          "params": {
+            "allowedKeys": [
+              "space"
+            ],
+            "forceEndRoutine": true
+          }
+        }
+      ]
+    },
+    "trial": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "fixation",
+          "start": 0,
+          "end": {
+            "duration": 0.5
+          },
+          "params": {
+            "text": "+",
+            "letterHeight": 0.08
+          }
+        },
+        {
+          "type": "Text",
+          "name": "flankers",
+          "start": {
+            "frame": 9
+          },
+          "end": {
+            "condition": "resp.rt"
+          },
+          "params": {
+            "text": "$flanker_string",
+            "letterHeight": 0.1,
+            "font": "Consolas",
+            "pos": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "type": "Keyboard",
+          "name": "resp",
+          "params": {
+            "allowedKeys": [
+              "f",
+              "j"
+            ],
+            "store": "first",
+            "storeCorrect": true,
+            "correctAns": "$corr_key"
+          }
+        }
+      ]
+    }
+  },
+  "flow": [
+    {
+      "routine": "instruction"
+    },
+    {
+      "loop": {
+        "name": "trials",
+        "routines": [
+          "trial"
+        ],
+        "n_reps": 2,
+        "order": "random",
+        "seed": 11,
+        "conditions": [
+          {
+            "flanker_string": "fffff",
+            "corr_key": "f",
+            "congruency": "congruent"
+          },
+          {
+            "flanker_string": "jjjjj",
+            "corr_key": "j",
+            "congruency": "congruent"
+          },
+          {
+            "flanker_string": "ffjff",
+            "corr_key": "j",
+            "congruency": "incongruent"
+          },
+          {
+            "flanker_string": "jjfjj",
+            "corr_key": "f",
+            "congruency": "incongruent"
+          }
+        ]
+      }
+    }
+  ],
+  "data": {
+    "filename": "data/{participant}/{name}_{date}",
+    "formats": [
+      "wide_csv"
+    ]
+  }
+}

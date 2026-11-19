@@ -1,0 +1,134 @@
+{
+  "spec_version": "1.0",
+  "name": "minimal",
+  "title": "One fixation screen, then one response",
+  "window": {
+    "size": [
+      1024,
+      768
+    ],
+    "fullscreen": false,
+    "units": "height",
+    "color": [
+      0,
+      0,
+      0
+    ]
+  },
+  "info": {
+    "participant": "auto",
+    "session": "001"
+  },
+  "routines": {
+    "instruction": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "prompt",
+          "start": 0,
+          "end": {
+            "condition": "start_resp.rt"
+          },
+          "params": {
+            "text": "Press SPACE to continue",
+            "pos": [
+              0,
+              0
+            ],
+            "letterHeight": 0.05,
+            "color": "white"
+          }
+        },
+        {
+          "type": "Keyboard",
+          "name": "start_resp",
+          "params": {
+            "allowedKeys": [
+              "space"
+            ],
+            "forceEndRoutine": true
+          }
+        }
+      ]
+    },
+    "trial": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "stim",
+          "start": 0,
+          "end": {
+            "duration": 1.0
+          },
+          "params": {
+            "text": "Hello",
+            "pos": [
+              0,
+              0
+            ],
+            "letterHeight": 0.08
+          }
+        },
+        {
+          "type": "Keyboard",
+          "name": "resp",
+          "params": {
+            "allowedKeys": [
+              "left",
+              "right"
+            ],
+            "store": "first"
+          }
+        }
+      ]
+    },
+    "goodbye": {
+      "components": [
+        {
+          "type": "Text",
+          "name": "thanks",
+          "start": 0,
+          "end": {
+            "duration": 2.0
+          },
+          "params": {
+            "text": "Thank you!",
+            "letterHeight": 0.05
+          }
+        }
+      ]
+    }
+  },
+  "flow": [
+    {
+      "routine": "instruction"
+    },
+    {
+      "loop": {
+        "name": "trials",
+        "routines": [
+          "trial"
+        ],
+        "n_reps": 1,
+        "order": "sequential",
+        "conditions": [
+          {
+            "side": "left"
+          },
+          {
+            "side": "right"
+          }
+        ]
+      }
+    },
+    {
+      "routine": "goodbye"
+    }
+  ],
+  "data": {
+    "filename": "data/{participant}/{name}_{date}",
+    "formats": [
+      "wide_csv"
+    ]
+  }
+}
